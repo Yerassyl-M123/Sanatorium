@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>SignUp</title>
+</head>
+<body>
+    <form action="/signup" method="post">
+        <label for="user-phone">Номер:</label>
+        <input type="tel" name="user-phone" id="user-phone" pattern="\+7[0-9]{10}" placeholder="+77082911094" title="Введите номер в формате +7XXXXXXXXXX">
+        <br>
+        <label for="user-email">Email</label>
+        <input type="email" name="user-email" id="user-email">
+        <br>
+        <label for="user-password">Пароль:</label>
+        <input type="password" name="user-password" id="user-password">
+        <br>
+        <label for="confirm-password">Подтвердите Пароль:</label>
+        <input type="password" name="confirm-password" id="confirm-password">
+        <br>
+        <button type="submit">Регистрация</button>
+    </form>
+
+    <a href="/signInPage" class="btn btn-secondary mt-4">Логин</a>
+</body>
+</html>

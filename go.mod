@@ -1,6 +1,8 @@
 module project
 
-go 1.21.6
+go 1.23.0
+
+toolchain go1.23.6
 
 require (
 	github.com/gin-contrib/cors v1.7.3
@@ -11,6 +13,7 @@ require (
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sfreiberg/gotwilio v1.0.0
 	golang.org/x/crypto v0.33.0
+	golang.org/x/exp v0.0.0-20250218142911-aa4b98e5adaa
 )
 
 require (

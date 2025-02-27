@@ -17,8 +17,8 @@ func HomePage(c *gin.Context) {
 	userID := session.Get("user_id")
 
 	var user models.User
-	config.DB.QueryRow("SELECT id, phone, email FROM users WHERE id = $1", userID).
-		Scan(&user.ID, &user.Phone, &user.Email)
+	config.DB.QueryRow("SELECT id, phone FROM users WHERE id = $1", userID).
+		Scan(&user.ID, &user.Phone)
 
 	regionFilter := c.Query("region")
 	regionsRows, err := config.DB.Query("SELECT region FROM quotas ORDER BY region ASC")
@@ -105,14 +105,13 @@ func HomePage(c *gin.Context) {
 	})
 }
 
-// Получение данных пользователя
 func GetUser(c *gin.Context) {
 	session := sessions.Default(c)
 	userID := session.Get("user_id")
 
 	var user models.User
-	err := config.DB.QueryRow("SELECT id, phone, email FROM users WHERE id = $1", userID).
-		Scan(&user.ID, &user.Phone, &user.Email)
+	err := config.DB.QueryRow("SELECT id, phone FROM users WHERE id = $1", userID).
+		Scan(&user.ID, &user.Phone)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Пользователь не найден"})
 		return
@@ -121,7 +120,6 @@ func GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-// Получение списка регионов
 func GetRegions(c *gin.Context) {
 	rows, err := config.DB.Query("SELECT region FROM quotas ORDER BY region ASC")
 	if err != nil {
@@ -140,7 +138,6 @@ func GetRegions(c *gin.Context) {
 	c.JSON(http.StatusOK, regions)
 }
 
-// Получение заявок
 func GetApplications(c *gin.Context) {
 	regionFilter := c.Query("region")
 	var rows *sql.Rows

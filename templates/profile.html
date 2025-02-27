@@ -9,18 +9,15 @@
 
 <body class="container mt-5">
     <h1>Личный кабинет</h1>
-    <p><strong>Почта:</strong> {{.user.Email}}</p>
+    <p><strong>Номер:</strong> {{.user.Phone}}</p>
 
-    <button class="btn btn-primary btn-sm" onclick="editProfile('{{.user.Phone}}', '{{.user.Email}}')">Редактировать</button>
+    <button class="btn btn-primary btn-sm" onclick="editProfile('{{.user.Phone}}')">Редактировать</button>
 
 
 <form method="POST" action="/update-profile" id="editUser" style="display: none;">
     <h2>Редактирование профиля</h2>
     <label>Номер:</label>
     <input type="text" name="phone" id="editUserPhone" class="form-control" value="{{.user.Phone}}" pattern="\+7[0-9]{10}" placeholder="+77082911094" title="Введите номер в формате +7XXXXXXXXXX" required>
-
-    <label>Email:</label>
-    <input type="email" name="email" id="editEmail" class="form-control" value="{{.user.Email}}" required>
 
     <button type="submit" class="btn btn-success mt-2">Сохранить</button>
 </form>
@@ -60,7 +57,7 @@
                     <td>
                         {{if eq .Status "pending"}}Ожидает рассмотрения{{end}}
                         {{if eq .Status "approved"}}Одобрено{{end}}
-                        {{if eq .Status "promoted"}}Продвинуто в очереди{{end}}
+                        {{if eq .Status "promoted"}}Отправлен{{end}}
                         {{if eq .Status "rejected"}}Отклонено{{end}}
                         {{if eq .Status "archive"}}Архивировано{{end}}
                     </td>
@@ -90,9 +87,8 @@
     <a href="/" class="btn btn-primary">На главную</a>
 
     <script>
-        function editProfile(phone, email) {
+        function editProfile(phone) {
             document.getElementById("editUserPhone").value = phone;
-            document.getElementById("editEmail").value = email;
             document.getElementById("editUser").style.display = "block";
             window.scrollTo(0, document.getElementById("editUser").offsetTop);
         }

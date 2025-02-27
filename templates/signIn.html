@@ -8,14 +8,86 @@
 </head>
 <body>
     <form action="/signin" method="post">
-        <label for="user-email">Почта:</label>
-        <input type="email" name="user-email" id="user-email">
+        <label for="user-phone">Номер:</label>
+        <input type="tel" name="user-phone" id="user-phone" pattern="\+7[0-9]{10}" placeholder="+77082911094" title="Введите номер в формате +7XXXXXXXXXX">
         <br>
         <label for="user-password">Пароль:</label>
         <input type="password" name="user-password" id="user-password">
         <br>
         <button type="submit">Войти</button>
+        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Забыли пароль?</button>
     </form>
+
+
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="forgotPasswordModalLabel">Восстановление пароля</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <label>Введите номер телефона:</label>
+                    <input type="tel" id="reset-phone" class="form-control" pattern="\+7[0-9]{10}" placeholder="+77082911094" title="Введите номер в формате +7XXXXXXXXXX" required><br>
+
+                    <button class="btn btn-success" onclick="sendResetCode()">Получить код</button>
+
+                    <div id="verify-code-section" style="display: none;">
+                        <label>Введите код из SMS:</label>
+                        <input type="text" id="verification-code" class="form-control" required><br>
+
+                        <label>Новый пароль:</label>
+                        <input type="password" id="new-password" class="form-control" required><br>
+
+                        <button class="btn btn-primary" onclick="resetPassword()">Сменить пароль</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function sendResetCode() {
+            const phone = document.getElementById("reset-phone").value;
+            fetch("/send-reset-code", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Код отправлен!");
+                    document.getElementById("verify-code-section").style.display = "block";
+                } else {
+                    alert(data.error);
+                }
+            });
+        }
+
+        function resetPassword() {
+            const phone = document.getElementById("reset-phone").value;
+            const code = document.getElementById("verification-code").value;
+            const newPassword = document.getElementById("new-password").value;
+
+            fetch("/reset-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone, code, newPassword })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Пароль успешно изменён!");
+                    location.reload();
+                } else {
+                    alert(data.error);
+                }
+            });
+        }
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <a href="/signUpPage" class="btn btn-secondary mt-4">Регистрация</a>
 

@@ -66,10 +66,12 @@ func main() {
 	server.GET("/signInPage", handlers.SignInPage)
 	server.POST("/signin", handlers.SignIn)
 	server.GET("/logout", handlers.Logout)
+	server.POST("/send-reset-code", handlers.SendResetCode)
+	server.POST("/reset-password", handlers.ResetPassword)
 
 	server.GET("/user", middleware.AuthRequired(handlers.GetUser))
-	server.GET("/regions", handlers.GetRegions)
-	server.GET("/applications", handlers.GetApplications)
+	server.GET("/regions", middleware.AuthRequired(handlers.GetRegions))
+	server.GET("/applications", middleware.AuthRequired(handlers.GetApplications))
 
 	config.StartCronJobs()
 

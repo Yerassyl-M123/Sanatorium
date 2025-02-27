@@ -20,8 +20,8 @@ func ProfilePage(c *gin.Context) {
 	}
 
 	var user models.User
-	err := config.DB.QueryRow("SELECT id, phone, email, password FROM users WHERE id = $1", userID).
-		Scan(&user.ID, &user.Phone, &user.Email, &user.Password)
+	err := config.DB.QueryRow("SELECT id, phone, password FROM users WHERE id = $1", userID).
+		Scan(&user.ID, &user.Phone, &user.Password)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка загрузки профиля"})
@@ -50,15 +50,15 @@ func ProfilePage(c *gin.Context) {
 		applications = append(applications, app)
 	}
 
-	// c.HTML(http.StatusOK, "profile.html", gin.H{
-	// 	"user":         user,
-	// 	"applications": applications,
-	// })
-
-	c.JSON(http.StatusOK, gin.H{
+	c.HTML(http.StatusOK, "profile.html", gin.H{
 		"user":         user,
 		"applications": applications,
 	})
+
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"user":         user,
+	// 	"applications": applications,
+	// })
 }
 
 func UpdateProfile(c *gin.Context) {
@@ -70,25 +70,23 @@ func UpdateProfile(c *gin.Context) {
 	}
 
 	userPhone := c.PostForm("phone")
-	email := c.PostForm("email")
 
-	if userPhone == "" || email == "" {
+	if userPhone == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Все поля обязательны"})
 		return
 	}
 
 	_, err := config.DB.Exec(`
         UPDATE users 
-        SET phone = $1, email = $2 
-        WHERE id = $3
-    `, userPhone, email, userID)
+        SET phone = $1 
+        WHERE id = $2
+    `, userPhone, userID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка обновления профиля"})
 		return
 	}
 
-	session.Set("user_email", email)
 	session.Save()
 
 	c.Redirect(http.StatusFound, "/profile")
